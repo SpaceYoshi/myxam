@@ -8,6 +8,5 @@
         <Picker Title="Select a monkey" Grid.Row="0" Grid.Column="0"/>
         <Button Text="Add" BackgroundColor="Gray" Grid.Column="1" Grid.Row="0"/>
         <ListView Background="LightBlue" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
-
     </Grid>
 </ContentPage>

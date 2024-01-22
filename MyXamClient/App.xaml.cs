@@ -1,4 +1,6 @@
-﻿namespace MyXamClient;
+﻿using MyXamClient.Views;
+
+namespace MyXamClient;
 
 public partial class App : Application
 {

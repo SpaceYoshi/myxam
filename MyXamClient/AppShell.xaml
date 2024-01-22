@@ -1,20 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<Shell
-    x:Class="MyXamClient.AppShell"
-    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:MyXamClient.Views"
-    Shell.FlyoutBehavior="Disabled"
-    Title="MyXamClient">
+<Shell xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+       xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+       xmlns:local="clr-namespace:MyXamClient.Views"
+       x:Class="MyXamClient.AppShell"
+       Title="MyXamClient">
 
-    <TabBar
-        Title="HomePage"
-        BindingContext="HomePage"
-        Route="HomePage"/>
-
-    <TabBar
-        Title="AgendaPage"
-        BindingContext="AgendaPage"
-        Route="AgendaPage"/>
-
+    <TabBar>
+        <ShellContent Title="Home"
+                      ContentTemplate="{DataTemplate local:HomePage}"/>
+        <ShellContent Title="Agenda"
+                      ContentTemplate="{DataTemplate local:AgendaPage}"/>
+    </TabBar>
 </Shell>
