@@ -1,8 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyXamServer", "MyXamServer\MyXamServer.csproj", "{E8B68381-3681-494D-801A-B6DCE9258FFC}"
-EndProject
+# Visual Studio Version 17
+VisualStudioVersion = 17.8.34322.80
+MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyXamClient", "MyXamClient\MyXamClient.csproj", "{E4F86700-E336-4AEB-9D8A-A2102C777BA4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyXamServer", "MyXamServer\MyXamServer.csproj", "{0F8D0035-5002-435D-BEB0-2117D4EAA75F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -10,13 +13,20 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{E8B68381-3681-494D-801A-B6DCE9258FFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E8B68381-3681-494D-801A-B6DCE9258FFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E8B68381-3681-494D-801A-B6DCE9258FFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E8B68381-3681-494D-801A-B6DCE9258FFC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E4F86700-E336-4AEB-9D8A-A2102C777BA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E4F86700-E336-4AEB-9D8A-A2102C777BA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4F86700-E336-4AEB-9D8A-A2102C777BA4}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
 		{E4F86700-E336-4AEB-9D8A-A2102C777BA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E4F86700-E336-4AEB-9D8A-A2102C777BA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4F86700-E336-4AEB-9D8A-A2102C777BA4}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{0F8D0035-5002-435D-BEB0-2117D4EAA75F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0F8D0035-5002-435D-BEB0-2117D4EAA75F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0F8D0035-5002-435D-BEB0-2117D4EAA75F}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{0F8D0035-5002-435D-BEB0-2117D4EAA75F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0F8D0035-5002-435D-BEB0-2117D4EAA75F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0F8D0035-5002-435D-BEB0-2117D4EAA75F}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal
