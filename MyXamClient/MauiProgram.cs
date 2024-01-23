@@ -1,4 +1,6 @@
 ﻿using Microsoft.Extensions.Logging;
+using MyXamClient.ViewModels;
+using MyXamClient.Views;
 
 namespace MyXamClient;
 
@@ -14,6 +16,11 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
+
+        builder.Services.AddSingleton<HomePage>();
+        builder.Services.AddSingleton<AgendaPage>();
+
+        builder.Services.AddSingleton<AgendaViewModel>();
 
 #if DEBUG
         builder.Logging.AddDebug();
