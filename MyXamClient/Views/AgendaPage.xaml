@@ -2,11 +2,39 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MyXamClient.Views.AgendaPage"
+             xmlns:viewModel ="clr-namespace:MyXamClient.ViewModels"
              Title="AgendaPage">
-    
-    <Grid ColumnDefinitions="2" RowDefinitions="2">
-        <Picker Title="Select a monkey" Grid.Row="0" Grid.Column="0"/>
-        <Button Text="Add" BackgroundColor="Gray" Grid.Column="1" Grid.Row="0"/>
-        <ListView Background="LightBlue" Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" Grid.RowSpan="2"/>
+
+    <Grid ColumnDefinitions="*,*" RowDefinitions="50,*" >
+        <Picker Title="Select a Day" 
+                Grid.Row="0" 
+                Grid.Column="0" 
+                Margin="5,0,20,0" 
+                HorizontalOptions="Start"
+                SelectedItem="{Binding ItemSelected}"
+                FontSize="14"
+                FontAttributes="Bold"
+                >
+            <Picker.Items>
+                <x:String>Monday</x:String>
+                <x:String>Tuesday</x:String>
+                <x:String>Wednesday</x:String>
+            </Picker.Items>
+        </Picker>
+
+        <Button Text="Add Event" 
+                BackgroundColor="Gray" 
+                Grid.Column="1" 
+                Grid.Row="0" 
+                Margin="20,0,5,0" 
+                HorizontalOptions="End"
+                Command="{Binding AddButtonCommand}"/>
+        
+        <ListView Background="LightBlue" 
+                  Grid.Column="0" 
+                  Grid.Row="1" 
+                  Grid.ColumnSpan="2" 
+                  Grid.RowSpan="2" 
+                  Margin="0,10,0,0"/>
     </Grid>
 </ContentPage>
