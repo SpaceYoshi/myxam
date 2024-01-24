@@ -1,13 +1,19 @@
+using System.Text;
+using System.Text.Json;
+
 namespace MyXamServer;
 
 public enum PayloadType
 {
     // Client <-> Server
-    Agenda,
-    Event,
+    AddAgenda,
+    AddEvent,
     // Client -> server
-    AvailableAgendasRequest,
-    AgendaRequest
+    RequestAvailableAgendas,
+    SubscribeToAgenda,
+    UnsubscribeFromAgenda,
+    // Server -> Client
+    AvailableAgendas
 }
 
 public static class Payload
@@ -32,4 +38,11 @@ public static class Payload
         return package;
     }
 
+    public static void SendJson(PayloadType type, object serializableObject, Stream stream, JsonSerializerOptions jsonOptions)
+    {
+        var jsonString = JsonSerializer.Serialize(serializableObject, jsonOptions);
+        var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
+        var payload = Payload.GetPayload(type, jsonBytes);
+        stream.Write(payload);
+    }
 }
