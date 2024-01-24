@@ -28,7 +28,9 @@ public static class MauiProgram
         builder.Services.AddSingleton<AgendaViewModel>();
         builder.Services.AddSingleton<HomePageViewModel>();
 
-        builder.Services.AddSingleton<TcpService>();
+        // builder.Services.AddSingleton<TcpService>();
+        var tcpService = new TcpService();
+        Console.WriteLine("TCP test: " + tcpService);
 
 #if DEBUG
         builder.Logging.AddDebug();

@@ -20,7 +20,7 @@ public class TcpService
     {
         var endPoint = new IPEndPoint(IPAddress.Loopback, 5123);
         // _tcpClient = new TcpClient(endPoint);
-        _tcpClient.Connect(new IPEndPoint(IPAddress.Loopback, 5123));
+        _tcpClient.Connect(endPoint);
         _tcpConnection = new TcpConnection(_tcpClient);
         Task.Run(() => _tcpConnection.Run()).Start();
     }
