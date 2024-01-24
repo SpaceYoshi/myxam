@@ -43,17 +43,17 @@ namespace MyXamClient.ViewModels
             AgendaViewModel.events.Add(this.Name);
         }
 
-        private Event CreateEvent()
-        {
-            Event newEvent = new Event{
-                Name = this.Name,
-                Type = this.Type,
-                Description = this.Description,
-                StartTime = this.StartTime,
-                EndTime = this.EndTime,
-            };
+        //private Event CreateEvent()
+        //{
+        //    Event newEvent = new Event{
+        //        Name = this.Name,
+        //        Type = this.Type,
+        //        Description = this.Description,
+        //        StartTime = this.StartTime,
+        //        EndTime = this.EndTime,
+        //    };
 
-            return newEvent;
-        }
+        //    return newEvent;
+        //}
     }
 }
