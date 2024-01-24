@@ -2,20 +2,21 @@ namespace MyXamServer;
 
 public enum PayloadType
 {
+    // Client <-> Server
     Agenda,
-    Event
+    Event,
+    // Client -> server
+    AvailableAgendasRequest,
+    AgendaRequest
 }
 
-public class PayloadUtility
+public static class Payload
 {
     public static PayloadType GetPayloadType(byte typeByte)
     {
-        var type = typeByte switch
-        {
-            0 => PayloadType.Agenda,
-            1 => PayloadType.Event,
-            _ => throw new ArgumentOutOfRangeException("Unexpected type value: " + typeByte)
-        };
+        var type = (PayloadType)typeByte;
+        if (!Enum.IsDefined(typeof(PayloadType), typeByte))
+            throw new ArgumentOutOfRangeException("Unexpected type value: " + typeByte);
         return type;
     }
 }

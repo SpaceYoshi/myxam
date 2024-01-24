@@ -1,4 +1,5 @@
-﻿using System.Net;
+﻿using System.Collections.Concurrent;
+using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
@@ -17,7 +18,7 @@ namespace MyXamServer
 {
     public class MyXamServer(int port)
     {
-        private IEnumerable<Agenda> _agendas; // TODO
+        private readonly ConcurrentDictionary<Guid, Agenda> _agendas = new();
 
         public async void Run()
         {
@@ -33,7 +34,7 @@ namespace MyXamServer
             }
         }
 
-        private static void HandleClient(TcpClient client)
+        private void HandleClient(TcpClient client)
         {
             using var reader = new BinaryReader(client.GetStream(), Encoding.UTF8);
 
@@ -50,22 +51,55 @@ namespace MyXamServer
                 bytesReceived += reader.Read(payloadBytes, bytesReceived, payloadLength - bytesReceived);
             }
 
-            var payloadType = PayloadUtility.GetPayloadType(payloadTypeByte);
+            var payloadType = Payload.GetPayloadType(payloadTypeByte);
             Console.WriteLine("Received payload of type {0} and length {1}.", payloadType, payloadLength);
 
-            switch (payloadType) // TODO
+            switch (payloadType)
             {
                 case PayloadType.Agenda:
+                {
                     var agenda = JsonSerializer.Deserialize<Agenda>(payloadBytes);
+                    if (agenda == null)
+                    {
+                        Console.WriteLine("Deserialized agenda is null.");
+                        break;
+                    }
+                    _agendas[agenda.Id] = agenda;
                     break;
+                }
                 case PayloadType.Event:
+                {
                     var agendaEvent = JsonSerializer.Deserialize<AgendaEvent>(payloadBytes);
+                    if (agendaEvent == null)
+                    {
+                        Console.WriteLine("Deserialized event is null.");
+                        break;
+                    }
+                    var agendaId = agendaEvent.AgendaId;
+                    if (!_agendas.ContainsKey(agendaId))
+                    {
+                        Console.WriteLine("Referenced agenda in event does not exist: " + agendaId);
+                        break;
+                    }
+                    var agenda = _agendas[agendaEvent.AgendaId];
+                    agenda.Events.Add(agendaId, agendaEvent);
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException("Unexpected type value: " + payloadType);
+                }
+                case PayloadType.AvailableAgendasRequest:
+                {
+                    // tuple list?
+                    foreach (var agenda in _agendas)
+                    {
+                        
+                    }
+                    break;
+                }
+                case PayloadType.AgendaRequest:
+                {
+                    break;
+                }
+                default: throw new ArgumentOutOfRangeException("Unexpected type value: " + payloadType);
             }
-
-
         }
     }
 }
