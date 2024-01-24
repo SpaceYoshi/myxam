@@ -16,8 +16,9 @@ public class TcpService
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
     };
 
-    public TcpService(IPEndPoint endPoint)
+    public TcpService()
     {
+        var endPoint = new IPEndPoint(IPAddress.Loopback, 5123);
         _tcpClient = new TcpClient(endPoint);
         _tcpConnection = new TcpConnection(_tcpClient);
         Task.Run(() => _tcpConnection.Run()).Start();
