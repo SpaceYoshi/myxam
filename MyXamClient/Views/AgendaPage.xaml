@@ -2,8 +2,9 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MyXamClient.Views.AgendaPage"
-             xmlns:viewModel ="clr-namespace:MyXamClient.ViewModels"
-             x:DataType="viewModel:AgendaViewModel"
+             xmlns:viewmodel="clr-namespace:MyXamClient.ViewModels"
+             x:DataType="viewmodel:AgendaViewModel"
+             xmlns:model ="clr-namespace:MyXamClient.Models"
              Title="AgendaPage">
 
     <Grid ColumnDefinitions="*,*" RowDefinitions="50,*" >
@@ -32,13 +33,13 @@
                 Command="{Binding NavigateToEventPageCommand}"/>
 
         <CollectionView Grid.Row="1" Grid.ColumnSpan="2"
-                        ItemsSource="{Binding Events}"
+                        ItemsSource="{Binding Agenda}"
                         Margin="0,10,0,0"
                         Background="LightCyan">
             <CollectionView.ItemTemplate>
-                <DataTemplate x:DataType="{x:Type x:String}">
+                <DataTemplate x:DataType="model:AgendaEvent">
                     <Frame Margin="5">
-                        <Label Text="{Binding .}"
+                        <Label Text="{Binding Name}"
                                FontSize="24"/>
                     </Frame>
                 </DataTemplate>

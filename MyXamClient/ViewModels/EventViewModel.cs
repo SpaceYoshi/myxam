@@ -1,12 +1,8 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Tracing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using MyXamClient.Models;
+using MyXamClient.Services;
+using System.Collections.ObjectModel;
 
 namespace MyXamClient.ViewModels
 {
@@ -19,41 +15,39 @@ namespace MyXamClient.ViewModels
         string name;
 
         [ObservableProperty]
-        string type;
-
-        [ObservableProperty]
         string description;
 
         [ObservableProperty]
-        string startTime;
+        DateTimeOffset startTime;
 
         [ObservableProperty]
-        string endTime;
-
+        DateTimeOffset endTime;
 
         [RelayCommand]
         async Task GoBack()
         {
-            await Shell.Current.GoToAsync("..");
+            AgendaViewModel.UpdateAgenda();
+            await Shell.Current.GoToAsync("AgendaPage");
         }
 
         [RelayCommand]
         async Task AddEvent()
         {
-            AgendaViewModel.events.Add(this.Name);
+            AgendaService.addEvent(CreateEvent());
         }
 
-        //private Event CreateEvent()
-        //{
-        //    Event newEvent = new Event{
-        //        Name = this.Name,
-        //        Type = this.Type,
-        //        Description = this.Description,
-        //        StartTime = this.StartTime,
-        //        EndTime = this.EndTime,
-        //    };
+        private AgendaEvent CreateEvent()
+        {
+            AgendaEvent newEvent = new AgendaEvent
+            (
+                id: Guid.NewGuid(),
+                agendaId: Guid.NewGuid(),
+                name: Name,
+                startTime: StartTime,
+                endTime: EndTime
+            );
 
-        //    return newEvent;
-        //}
+            return newEvent;
+        }
     }
 }
