@@ -3,6 +3,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using MyXamClient.Models;
 
 if (args.Length != 1)
@@ -36,23 +37,26 @@ namespace MyXamServer
 
         private void HandleClient(TcpClient client)
         {
-            using var reader = new BinaryReader(client.GetStream(), Encoding.UTF8);
+            using var stream = client.GetStream();
+            using var reader = new BinaryReader(stream, Encoding.UTF8, true);
 
             var unsignedPayloadLength = reader.ReadUInt32();
             var payloadLength = Convert.ToInt32(unsignedPayloadLength); // Ignore first bit for now
-
             var payloadTypeByte = reader.ReadByte();
 
             var payloadBytes = new byte[payloadLength];
             var bytesReceived = 0;
-
             while (bytesReceived < payloadLength)
             {
                 bytesReceived += reader.Read(payloadBytes, bytesReceived, payloadLength - bytesReceived);
             }
-
             var payloadType = Payload.GetPayloadType(payloadTypeByte);
             Console.WriteLine("Received payload of type {0} and length {1}.", payloadType, payloadLength);
+
+            JsonSerializerOptions jsonOptions = new()
+            {
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
+            };
 
             switch (payloadType)
             {
@@ -87,11 +91,12 @@ namespace MyXamServer
                 }
                 case PayloadType.AvailableAgendasRequest:
                 {
-                    // tuple list?
-                    foreach (var agenda in _agendas)
-                    {
-                        
-                    }
+                    var emptyAgendas = new List<Agenda>(_agendas.Count);
+                    emptyAgendas.AddRange(_agendas.Values.Select(agenda => new Agenda(agenda.Id, agenda.Name)));
+                    var jsonString = JsonSerializer.Serialize(emptyAgendas);
+                    var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
+                    var package = Payload.GetPayload(PayloadType.Agenda, jsonBytes);
+                    stream.Write(package);
                     break;
                 }
                 case PayloadType.AgendaRequest:

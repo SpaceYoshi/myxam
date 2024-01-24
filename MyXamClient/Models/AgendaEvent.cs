@@ -20,11 +20,8 @@ public class AgendaEvent(
     public string Name { get; set; } = name;
     public DateTimeOffset StartTime { get; set; } = startTime;
     public DateTimeOffset EndTime { get; set; } = endTime;
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public string? Location { get; set; } = location;
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public string? Description { get; set; } = description;
-    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
     public HashSet<string>? Tags { get; set; } = tags;
     public EventPriority Priority { get; set; } = priority;
 

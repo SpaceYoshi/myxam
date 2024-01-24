@@ -19,4 +19,17 @@ public static class Payload
             throw new ArgumentOutOfRangeException("Unexpected type value: " + typeByte);
         return type;
     }
+
+    public static byte[] GetPayload(PayloadType type, byte[] payload)
+    {
+        var length = (uint)(payload.Length + 5);
+        var package = new byte[length];
+
+        BitConverter.GetBytes(length).CopyTo(package, 0);
+        package[4] = Convert.ToByte(type);
+        payload.CopyTo(package, 5);
+
+        return package;
+    }
+
 }
