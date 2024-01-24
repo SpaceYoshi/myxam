@@ -1,57 +1,51 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using MyXamClient.Models;
 using MyXamClient.Services;
-using System.Collections.ObjectModel;
+using MyXamLibrary.Models;
 
-namespace MyXamClient.ViewModels
+namespace MyXamClient.ViewModels;
+
+public partial class EventViewModel : ObservableObject
 {
-    public partial class EventViewModel : ObservableObject
+    [ObservableProperty]
+    private int _id;
+
+    [ObservableProperty]
+    private string _name;
+
+    [ObservableProperty]
+    private string _description;
+
+    [ObservableProperty]
+    private DateTimeOffset _startTime;
+
+    [ObservableProperty]
+    private DateTimeOffset _endTime;
+
+    [RelayCommand]
+    private static async Task GoBack()
     {
-        [ObservableProperty]
-        int id;
+        await AgendaViewModel.UpdateAgenda();
+        await Shell.Current.GoToAsync("AgendaPage");
+    }
 
-        [ObservableProperty]
-        string name;
+    [RelayCommand]
+    private void AddEvent()
+    {
+        AgendaService.Events.Add(CreateEvent());
+    }
 
-        [ObservableProperty]
-        string location;
+    private AgendaEvent CreateEvent()
+    {
+        var newEvent = new AgendaEvent
+        (
+            id: Guid.NewGuid(),
+            agendaId: Guid.NewGuid(),
+            name: Name,
+            startTime: StartTime,
+            endTime: EndTime
+        );
 
-        [ObservableProperty]
-        string description;
-
-        [ObservableProperty]
-        DateTimeOffset startTime;
-
-        [ObservableProperty]
-        DateTimeOffset endTime;
-
-        [RelayCommand]
-        async Task GoBack()
-        {
-            AgendaViewModel.UpdateAgenda();
-            await Shell.Current.GoToAsync("AgendaPage");
-        }
-
-        [RelayCommand]
-        async Task AddEvent()
-        {
-            AgendaService.addEvent(CreateEvent());
-        }
-
-        private AgendaEvent CreateEvent()
-        {
-            AgendaEvent newEvent = new AgendaEvent
-            (
-                id: Guid.NewGuid(),
-                agendaId: Guid.NewGuid(),
-                name: Name,
-                location: Location,
-                startTime: StartTime,
-                endTime: EndTime
-            );
-
-            return newEvent;
-        }
+        return newEvent;
     }
 }
