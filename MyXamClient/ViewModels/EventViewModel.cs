@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MyXamClient.Services;
+using MyXamClient.Services.Tcp;
 using MyXamLibrary.Models;
 
 namespace MyXamClient.ViewModels;
@@ -32,7 +33,9 @@ public partial class EventViewModel : ObservableObject
     [RelayCommand]
     private void AddEvent()
     {
-        AgendaService.Events.Add(CreateEvent());
+        var newEvent = CreateEvent();
+        AgendaService.Events.Add(newEvent);
+        TcpService.SendEvent(newEvent);
     }
 
     private AgendaEvent CreateEvent()

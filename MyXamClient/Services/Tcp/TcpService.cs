@@ -9,9 +9,9 @@ namespace MyXamClient.Services.Tcp;
 
 public class TcpService
 {
-    private readonly TcpClient _tcpClient;
+    private static readonly TcpClient _tcpClient = new TcpClient(new IPEndPoint(IPAddress.Loopback, 5123));
     private readonly TcpConnection _tcpConnection;
-    private readonly JsonSerializerOptions _jsonOptions = new()
+    private static readonly JsonSerializerOptions _jsonOptions = new()
     {
         DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
     };
@@ -19,17 +19,17 @@ public class TcpService
     public TcpService()
     {
         var endPoint = new IPEndPoint(IPAddress.Loopback, 5123);
-        _tcpClient = new TcpClient(endPoint);
+        // _tcpClient = new TcpClient(endPoint);
         _tcpConnection = new TcpConnection(_tcpClient);
         Task.Run(() => _tcpConnection.Run()).Start();
     }
 
-    public void SendAgenda(Agenda agenda)
+    public static void SendAgenda(Agenda agenda)
     {
         Payload.SendJson(PayloadType.AddAgenda, agenda, _tcpClient.GetStream(), _jsonOptions);
     }
 
-    public void SendEvent(AgendaEvent agendaEvent)
+    public static void SendEvent(AgendaEvent agendaEvent)
     {
         Payload.SendJson(PayloadType.AddEvent, agendaEvent, _tcpClient.GetStream(), _jsonOptions);
     }
