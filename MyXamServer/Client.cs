@@ -3,7 +3,8 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using ConcurrentCollections;
-using MyXamClient.Models;
+using MyXamLibrary;
+using MyXamLibrary.Models;
 
 namespace MyXamServer;
 
@@ -20,110 +21,118 @@ public class Client(Guid clientId, TcpClient tcpClient, MyXamServer server)
             using var stream = TcpClient.GetStream();
             using var reader = new BinaryReader(stream, Encoding.UTF8, true);
 
-            var unsignedPayloadLength = reader.ReadUInt32();
-            var payloadLength = Convert.ToInt32(unsignedPayloadLength); // Ignore first bit for now
-            var payloadTypeByte = reader.ReadByte();
-
-            var payloadBytes = new byte[payloadLength];
-            var bytesReceived = 0;
-            while (bytesReceived < payloadLength)
+            while (tcpClient.Connected)
             {
-                bytesReceived += reader.Read(payloadBytes, bytesReceived, payloadLength - bytesReceived);
-            }
+                var unsignedPayloadLength = reader.ReadUInt32();
+                var payloadLength = Convert.ToInt32(unsignedPayloadLength); // Ignore first bit for now
+                var payloadTypeByte = reader.ReadByte();
 
-            var payloadType = Payload.GetPayloadType(payloadTypeByte);
-            Console.WriteLine("Received payload of type {0} and length {1}.", payloadType, payloadLength);
-
-            JsonSerializerOptions jsonOptions = new()
-            {
-                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
-            };
-
-            switch (payloadType)
-            {
-                case PayloadType.AddAgenda:
+                var payloadBytes = new byte[payloadLength];
+                var bytesReceived = 0;
+                while (bytesReceived < payloadLength)
                 {
-                    var agenda = JsonSerializer.Deserialize<Agenda>(payloadBytes);
-                    if (agenda == null)
+                    bytesReceived += reader.Read(payloadBytes, bytesReceived, payloadLength - bytesReceived);
+                }
+
+                var payloadType = Payload.GetPayloadType(payloadTypeByte);
+                Console.WriteLine("Received payload of type {0} and length {1}.", payloadType, payloadLength);
+
+                JsonSerializerOptions jsonOptions = new()
+                {
+                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
+                };
+
+                switch (payloadType)
+                {
+                    case PayloadType.AddAgenda:
                     {
-                        Console.WriteLine("Deserialized agenda is null.");
+                        var agenda = JsonSerializer.Deserialize<Agenda>(payloadBytes);
+                        if (agenda == null)
+                        {
+                            Console.WriteLine("Deserialized agenda is null.");
+                            break;
+                        }
+
+                        // Add agenda to server
+                        server.Agendas[agenda.Id] = agenda;
                         break;
                     }
-
-                    // Add agenda to server
-                    server.Agendas[agenda.Id] = agenda;
-                    break;
-                }
-                case PayloadType.AddEvent:
-                {
-                    var agendaEvent = JsonSerializer.Deserialize<AgendaEvent>(payloadBytes);
-                    if (agendaEvent == null)
+                    case PayloadType.AddEvent:
                     {
-                        Console.WriteLine("Deserialized event is null.");
+                        var agendaEvent = JsonSerializer.Deserialize<AgendaEvent>(payloadBytes);
+                        if (agendaEvent == null)
+                        {
+                            Console.WriteLine("Deserialized event is null.");
+                            break;
+                        }
+
+                        // Add event to server if its agenda exists
+                        var agendaId = agendaEvent.AgendaId;
+                        if (!AgendaExists(agendaId)) break;
+                        var agenda = server.Agendas[agendaEvent.AgendaId];
+                        agenda.Events.Add(agendaId, agendaEvent);
+
+                        // Send event to all clients that are subscribed to the event's agenda
+                        foreach (var client in server.Clients.Values.Where(client =>
+                                     client.SubscribedAgendaIds.Contains(agendaId)))
+                        {
+                            Stream clientStream = client.TcpClient.GetStream();
+                            Payload.SendJson(PayloadType.AddEvent, agendaEvent, clientStream, jsonOptions);
+                        }
+
                         break;
                     }
-
-                    // Add event to server if its agenda exists
-                    var agendaId = agendaEvent.AgendaId;
-                    if (!AgendaExists(agendaId)) break;
-                    var agenda = server.Agendas[agendaEvent.AgendaId];
-                    agenda.Events.Add(agendaId, agendaEvent);
-
-                    // Send event to all clients that are subscribed to the event's agenda
-                    foreach (var client in server.Clients.Values.Where(client => client.SubscribedAgendaIds.Contains(agendaId)))
+                    case PayloadType.RequestAvailableAgendas:
                     {
-                        Stream clientStream = client.TcpClient.GetStream();
-                        Payload.SendJson(PayloadType.AddEvent, agendaEvent, clientStream, jsonOptions);
-                    }
-                    break;
-                }
-                case PayloadType.RequestAvailableAgendas:
-                {
-                    // Send server agendas without events
-                    var emptyAgendas = new List<Agenda>(server.Agendas.Count);
-                    emptyAgendas.AddRange(server.Agendas.Values.Select(agenda => new Agenda(agenda.Id, agenda.Name)));
-                    Payload.SendJson(PayloadType.AvailableAgendas, emptyAgendas, stream, jsonOptions);
-                    break;
-                }
-                case PayloadType.SubscribeToAgenda:
-                {
-                    var requestedIdAgenda = JsonSerializer.Deserialize<Agenda>(payloadBytes);
-                    if (requestedIdAgenda == null)
-                    {
-                        Console.WriteLine("Deserialized agenda is null.");
+                        // Send server agendas without events
+                        var emptyAgendas = new List<Agenda>(server.Agendas.Count);
+                        emptyAgendas.AddRange(
+                            server.Agendas.Values.Select(agenda => new Agenda(agenda.Id, agenda.Name)));
+                        Payload.SendJson(PayloadType.AvailableAgendas, emptyAgendas, stream, jsonOptions);
                         break;
                     }
-
-                    var agendaId = requestedIdAgenda.Id;
-                    if (!AgendaExists(agendaId)) break;
-
-                    SubscribeToAgenda(agendaId);
-                    // Send subscribed agenda
-                    var agenda = server.Agendas[agendaId];
-                    Payload.SendJson(PayloadType.AddAgenda, agenda, stream, jsonOptions);
-                    break;
-                }
-                case PayloadType.UnsubscribeFromAgenda:
-                {
-                    var requestedIdAgenda = JsonSerializer.Deserialize<Agenda>(payloadBytes);
-                    if (requestedIdAgenda == null)
+                    case PayloadType.SubscribeToAgenda:
                     {
-                        Console.WriteLine("Deserialized agenda is null.");
+                        var requestedIdAgenda = JsonSerializer.Deserialize<Agenda>(payloadBytes);
+                        if (requestedIdAgenda == null)
+                        {
+                            Console.WriteLine("Deserialized agenda is null.");
+                            break;
+                        }
+
+                        var agendaId = requestedIdAgenda.Id;
+                        if (!AgendaExists(agendaId)) break;
+
+                        SubscribeToAgenda(agendaId);
+                        // Send subscribed agenda
+                        var agenda = server.Agendas[agendaId];
+                        Payload.SendJson(PayloadType.AddAgenda, agenda, stream, jsonOptions);
                         break;
                     }
+                    case PayloadType.UnsubscribeFromAgenda:
+                    {
+                        var requestedIdAgenda = JsonSerializer.Deserialize<Agenda>(payloadBytes);
+                        if (requestedIdAgenda == null)
+                        {
+                            Console.WriteLine("Deserialized agenda is null.");
+                            break;
+                        }
 
-                    var agendaId = requestedIdAgenda.Id;
-                    if (!AgendaExists(agendaId)) break;
+                        var agendaId = requestedIdAgenda.Id;
+                        if (!AgendaExists(agendaId)) break;
 
-                    UnsubscribeFromAgenda(agendaId);
-                    break;
+                        UnsubscribeFromAgenda(agendaId);
+                        break;
+                    }
+                    case PayloadType.AvailableAgendas:
+                    default:
+                        throw new ArgumentOutOfRangeException("Unexpected type value: " + payloadType);
                 }
-                case PayloadType.AvailableAgendas:
-                default: throw new ArgumentOutOfRangeException("Unexpected type value: " + payloadType);
             }
         }
-        catch (IOException)
+        catch (Exception e)
         {
+            Console.WriteLine(e);
             Console.WriteLine("Client disconnected.");
         }
         finally

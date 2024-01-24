@@ -1,24 +1,11 @@
-﻿using MyXamClient.Models;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Concurrent;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using MyXamLibrary.Models;
 
-namespace MyXamClient.Services
+namespace MyXamClient.Services;
+
+public static class AgendaService
 {
-    public static class AgendaService
-    {
-        private static ObservableCollection<AgendaEvent> events = new ObservableCollection<AgendaEvent>();
-        
-        public static void addEvent(AgendaEvent agendaEvent)
-        {
-            events.Add(agendaEvent);
-        }
-        public static ObservableCollection<AgendaEvent> getEvents()
-        {
-            return events;
-        }
-    }
+    public static ConcurrentDictionary<Guid, Agenda> Agendas { get; } = new();
+    public static ObservableCollection<AgendaEvent> Events { get; } = [];
 }

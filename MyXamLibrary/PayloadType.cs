@@ -1,7 +1,7 @@
 using System.Text;
 using System.Text.Json;
 
-namespace MyXamServer;
+namespace MyXamLibrary;
 
 public enum PayloadType
 {
@@ -42,7 +42,7 @@ public static class Payload
     {
         var jsonString = JsonSerializer.Serialize(serializableObject, jsonOptions);
         var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
-        var payload = Payload.GetPayload(type, jsonBytes);
+        var payload = GetPayload(type, jsonBytes);
         stream.Write(payload);
     }
 }
