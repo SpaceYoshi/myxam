@@ -30,7 +30,7 @@ public class TcpService
         var endPoint = new IPEndPoint(IPAddress.Loopback, 5123);
         _tcpClient.Connect(endPoint);
         _tcpConnection = new TcpConnection(_tcpClient);
-        Task.Run(() => _tcpConnection.Run()).Start();
+        Task.Run(() => _tcpConnection.Run());
     }
 
     public static void SendAgenda(Agenda agenda)
