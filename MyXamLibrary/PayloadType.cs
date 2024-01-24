@@ -20,9 +20,19 @@ public static class Payload
 {
     public static PayloadType GetPayloadType(byte typeByte)
     {
-        var type = (PayloadType)typeByte;
-        if (!Enum.IsDefined(typeof(PayloadType), typeByte))
-            throw new ArgumentOutOfRangeException("Unexpected type value: " + typeByte);
+        // var type = (PayloadType)typeByte;
+        // if (!Enum.IsDefined(typeof(PayloadType), typeByte))
+        //     throw new ArgumentOutOfRangeException("Unexpected type value: " + typeByte);
+        var type = typeByte switch
+        {
+            0 => PayloadType.AddAgenda,
+            1 => PayloadType.AddEvent,
+            2 => PayloadType.RequestAvailableAgendas,
+            3 => PayloadType.SubscribeToAgenda,
+            4 => PayloadType.UnsubscribeFromAgenda,
+            5 => PayloadType.AvailableAgendas,
+            _ => throw new ArgumentOutOfRangeException("Unexpected type value: " + typeByte)
+        };
         return type;
     }
 
