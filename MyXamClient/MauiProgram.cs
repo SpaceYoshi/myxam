@@ -29,6 +29,7 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<EventViewModel>();
         builder.Services.AddSingleton<AgendaViewModel>();
+        builder.Services.AddSingleton<HomePageViewModel>();
 
 #if DEBUG
         builder.Logging.AddDebug();

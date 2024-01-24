@@ -15,6 +15,9 @@ namespace MyXamClient.ViewModels
         string name;
 
         [ObservableProperty]
+        string location;
+
+        [ObservableProperty]
         string description;
 
         [ObservableProperty]
@@ -43,6 +46,7 @@ namespace MyXamClient.ViewModels
                 id: Guid.NewGuid(),
                 agendaId: Guid.NewGuid(),
                 name: Name,
+                location: Location,
                 startTime: StartTime,
                 endTime: EndTime
             );
