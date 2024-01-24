@@ -16,6 +16,7 @@ public class Client(Guid clientId, TcpClient tcpClient, MyXamServer server)
 
     public void Listen()
     {
+        Console.WriteLine("New client started: " + Id);
         try
         {
             using var stream = TcpClient.GetStream();

@@ -30,7 +30,7 @@ namespace MyXamServer
             {
                 var client = new Client(Guid.NewGuid(), listener.AcceptTcpClient(), this);
                 Clients[client.Id] = client;
-                Task.Run(() => client.Listen()).Start();
+                Task.Run(() => client.Listen());
             }
         }
     }
