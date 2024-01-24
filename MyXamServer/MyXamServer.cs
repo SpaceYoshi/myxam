@@ -1,7 +1,7 @@
 ﻿using System.Collections.Concurrent;
 using System.Net;
 using System.Net.Sockets;
-using MyXamClient.Models;
+using MyXamLibrary.Models;
 
 if (args.Length != 1)
 {

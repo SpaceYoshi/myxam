@@ -12,7 +12,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\MyXamClient\MyXamClient.csproj" />
+      <ProjectReference Include="..\MyXamLibrary\MyXamLibrary.csproj" />
     </ItemGroup>
 
 </Project>

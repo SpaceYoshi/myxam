@@ -105,4 +105,8 @@
       </MauiXaml>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\MyXamLibrary\MyXamLibrary.csproj" />
+    </ItemGroup>
+
 </Project>

@@ -1,10 +1,10 @@
-namespace MyXamClient.Models;
+namespace MyXamLibrary.Models;
 
 public class Agenda(Guid id, string name, Dictionary<Guid, AgendaEvent>? events = default) : IEquatable<Agenda>
 {
     public Guid Id { get; } = id;
     public string Name { get; set; } = name;
-    public Dictionary<Guid, AgendaEvent> Events { get; set; } = events ?? new Dictionary<Guid, AgendaEvent>();
+    public Dictionary<Guid, AgendaEvent> Events { get; } = events ?? new Dictionary<Guid, AgendaEvent>();
 
     public bool Equals(Agenda? other)
     {

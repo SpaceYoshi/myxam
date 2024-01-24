@@ -1,4 +1,4 @@
-﻿namespace MyXamClient.Models;
+﻿namespace MyXamLibrary.Models;
 
 public class AgendaEvent(
     Guid id,

@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
-using MyXamClient.Models;
-using MyXamClient.Services;
+using MyXamClient.Services.Tcp;
 using MyXamClient.ViewModels;
 using MyXamClient.Views;
 
@@ -24,12 +23,12 @@ public static class MauiProgram
         builder.Services.AddSingleton<HomePage>();
         builder.Services.AddSingleton<AgendaPage>();
         builder.Services.AddTransient<EventPage>();
-        builder.Services.AddSingleton<Agenda>();
-        builder.Services.AddSingleton<AgendaEvent>();
 
         builder.Services.AddSingleton<EventViewModel>();
         builder.Services.AddSingleton<AgendaViewModel>();
         builder.Services.AddSingleton<HomePageViewModel>();
+
+        builder.Services.AddSingleton<TcpService>();
 
 #if DEBUG
         builder.Logging.AddDebug();
