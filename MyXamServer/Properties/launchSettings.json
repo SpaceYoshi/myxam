@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MyXamServer": {
+      "commandName": "Project",
+      "commandLineArgs": "5123"
+    }
+  }
+}

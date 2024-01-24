@@ -14,7 +14,7 @@ public partial class EventViewModel : ObservableObject
     private string _name;
 
     [ObservableProperty]
-    private string _description;
+    private string _location;
 
     [ObservableProperty]
     private DateTimeOffset _startTime;
@@ -42,6 +42,7 @@ public partial class EventViewModel : ObservableObject
             id: Guid.NewGuid(),
             agendaId: Guid.NewGuid(),
             name: Name,
+            location: Location,
             startTime: StartTime,
             endTime: EndTime
         );
