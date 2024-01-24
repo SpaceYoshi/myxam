@@ -1,5 +1,7 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
+﻿using CommunityToolkit.Maui.Views;
+using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using MyXamClient.Views;
 using System.Collections.ObjectModel;
 
 namespace MyXamClient.ViewModels;
@@ -12,18 +14,14 @@ public partial class AgendaViewModel : ObservableObject
     }
 
     [ObservableProperty]
-    ObservableCollection<string> events;
+    public static ObservableCollection<string> events;
 
     [ObservableProperty]
     private string selectedItem;
 
     [RelayCommand]
-    void Add()
+    async Task NavigateToEventPage()
     {
-        if (string.IsNullOrEmpty(selectedItem))
-            return;
-
-        Events.Add(selectedItem);
-        selectedItem = string.Empty;
+        await Shell.Current.GoToAsync("EventPage");
     }
 }

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using CommunityToolkit.Maui;
+using Microsoft.Extensions.Logging;
 using MyXamClient.ViewModels;
 using MyXamClient.Views;
 
@@ -11,6 +12,7 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+            .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -19,7 +21,9 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<HomePage>();
         builder.Services.AddSingleton<AgendaPage>();
+        builder.Services.AddTransient<EventPage>();
 
+        builder.Services.AddSingleton<EventViewModel>();
         builder.Services.AddSingleton<AgendaViewModel>();
 
 #if DEBUG

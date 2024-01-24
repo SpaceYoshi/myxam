@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:MyXamClient.ViewModels"
+             x:Class="MyXamClient.Views.EventPage"
+             Title="EventPage">
+    
+    <StackLayout Margin="20">
+
+        <Label Text="Naam" FontSize="Medium" />
+        <Entry Placeholder="Voer naam in" Text="{Binding Name}"/>
+
+        <!--<Label Text="Type" F--><!--ontSize="Medium" />
+        <Entry Placeholder="Voer type in" Text="{Binding Type}" />
+
+        <Label Text="Beschrijving" FontSize="Medium" />
+        <Editor Placeholder="Voer beschrijving in" Text="{Binding Description}" />
+
+        <Label Text="Starttijd" FontSize="Medium" />
+        <TimePicker Format="T" Time="{Binding StartTime}" />
+
+        <Label Text="Eindtijd" FontSize="Medium" />
+        <TimePicker Format="T" Time="{Binding EndTime}" />-->
+
+        <Button Text="Save" Command="{Binding AddEventCommand}" 
+                HorizontalOptions="Start" 
+                VerticalOptions="End" 
+                Margin="0,0,10,0" />
+
+        <Button Text="Return" Command="{Binding GoBackCommand}" 
+        HorizontalOptions="End" 
+        VerticalOptions="End" 
+        Margin="10,0,0,0" />
+    </StackLayout>
+</ContentPage>
