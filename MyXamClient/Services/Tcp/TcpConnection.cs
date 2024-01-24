@@ -45,11 +45,6 @@ public class TcpConnection(TcpClient tcpClient)
                 var payloadType = Payload.GetPayloadType(payloadTypeByte);
                 Console.WriteLine("Received payload of type {0} and length {1}.", payloadType, payloadLength);
 
-                JsonSerializerOptions jsonOptions = new()
-                {
-                    DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingDefault
-                };
-
                 switch (payloadType)
                 {
                     case PayloadType.AddAgenda:
