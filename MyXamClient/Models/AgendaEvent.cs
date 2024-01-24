@@ -1,16 +1,17 @@
 ﻿namespace MyXamClient.Models;
 
-public class Event(
+public class AgendaEvent(
     Guid id,
     Guid agendaId,
     string name,
     DateTimeOffset startTime,
     DateTimeOffset endTime,
+    // Optional
     string? location = default,
     string? description = default,
     IEnumerable<string>? tags = default,
     EventPriority priority = EventPriority.Normal)
-    : IEquatable<Event>
+    : IEquatable<AgendaEvent>
 {
     private Guid Id { get; } = id;
     private Guid AgendaId { get; set; } = agendaId;
@@ -22,7 +23,7 @@ public class Event(
     private IEnumerable<string>? Tags { get; set; } = tags;
     private EventPriority Priority { get; set; } = priority;
 
-    public bool Equals(Event? other)
+    public bool Equals(AgendaEvent? other)
     {
         if (ReferenceEquals(null, other)) return false;
         if (ReferenceEquals(this, other)) return true;
@@ -34,7 +35,7 @@ public class Event(
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != GetType()) return false;
-        return Equals((Event) obj);
+        return Equals((AgendaEvent) obj);
     }
 
     public override int GetHashCode()
