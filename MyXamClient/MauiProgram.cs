@@ -29,8 +29,9 @@ public static class MauiProgram
         builder.Services.AddSingleton<HomePageViewModel>();
 
         // builder.Services.AddSingleton<TcpService>();
-        var tcpService = new TcpService();
-        Console.WriteLine("TCP test: " + tcpService);
+        // var tcpService = new TcpService();
+        // Console.WriteLine("TCP test: " + tcpService);
+        TcpService.StartClient();
 
 #if DEBUG
         builder.Logging.AddDebug();
