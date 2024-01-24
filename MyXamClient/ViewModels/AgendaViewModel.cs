@@ -35,6 +35,6 @@ public partial class AgendaViewModel : ObservableObject
 
     public static void ClearAgenda()
     {
-        agenda.Clear();
+        _agenda.Clear();
     }
 }
