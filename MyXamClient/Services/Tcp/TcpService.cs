@@ -9,7 +9,7 @@ namespace MyXamClient.Services.Tcp;
 
 public class TcpService
 {
-    private static readonly TcpClient _tcpClient = new TcpClient(new IPEndPoint(IPAddress.Loopback, 5123));
+    private static readonly TcpClient _tcpClient = new(new IPEndPoint(IPAddress.Loopback, 5123));
     private readonly TcpConnection _tcpConnection;
     private static readonly JsonSerializerOptions _jsonOptions = new()
     {
@@ -20,6 +20,7 @@ public class TcpService
     {
         var endPoint = new IPEndPoint(IPAddress.Loopback, 5123);
         // _tcpClient = new TcpClient(endPoint);
+        _tcpClient.Connect(new IPEndPoint(IPAddress.Loopback, 5123));
         _tcpConnection = new TcpConnection(_tcpClient);
         Task.Run(() => _tcpConnection.Run()).Start();
     }
