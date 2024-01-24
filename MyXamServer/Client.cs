@@ -46,6 +46,7 @@ public class Client(Guid clientId, TcpClient tcpClient, MyXamServer server)
                 {
                     case PayloadType.AddAgenda:
                     {
+                        Console.WriteLine("Received agenda.");
                         var agenda = JsonSerializer.Deserialize<Agenda>(payloadBytes);
                         if (agenda == null)
                         {
@@ -55,10 +56,12 @@ public class Client(Guid clientId, TcpClient tcpClient, MyXamServer server)
 
                         // Add agenda to server
                         server.Agendas[agenda.Id] = agenda;
+                        Console.WriteLine("Agenda added to server.");
                         break;
                     }
                     case PayloadType.AddEvent:
                     {
+                        Console.WriteLine("Received event.");
                         var agendaEvent = JsonSerializer.Deserialize<AgendaEvent>(payloadBytes);
                         if (agendaEvent == null)
                         {
@@ -71,6 +74,7 @@ public class Client(Guid clientId, TcpClient tcpClient, MyXamServer server)
                         if (!AgendaExists(agendaId)) break;
                         var agenda = server.Agendas[agendaEvent.AgendaId];
                         agenda.Events.Add(agendaId, agendaEvent);
+                        Console.WriteLine("Event added to server.");
 
                         // Send event to all clients that are subscribed to the event's agenda
                         foreach (var client in server.Clients.Values.Where(client =>
@@ -79,20 +83,23 @@ public class Client(Guid clientId, TcpClient tcpClient, MyXamServer server)
                             Stream clientStream = client.TcpClient.GetStream();
                             Payload.SendJson(PayloadType.AddEvent, agendaEvent, clientStream, jsonOptions);
                         }
-
+                        Console.WriteLine("Event sent to other clients.");
                         break;
                     }
                     case PayloadType.RequestAvailableAgendas:
                     {
+                        Console.WriteLine("Received request for available agendas.");
                         // Send server agendas without events
                         var emptyAgendas = new List<Agenda>(server.Agendas.Count);
                         emptyAgendas.AddRange(
                             server.Agendas.Values.Select(agenda => new Agenda(agenda.Id, agenda.Name)));
                         Payload.SendJson(PayloadType.AvailableAgendas, emptyAgendas, stream, jsonOptions);
+                        Console.WriteLine("Sending available agendas.");
                         break;
                     }
                     case PayloadType.SubscribeToAgenda:
                     {
+                        Console.WriteLine("Received subscribe request.");
                         var requestedIdAgenda = JsonSerializer.Deserialize<Agenda>(payloadBytes);
                         if (requestedIdAgenda == null)
                         {
@@ -107,10 +114,12 @@ public class Client(Guid clientId, TcpClient tcpClient, MyXamServer server)
                         // Send subscribed agenda
                         var agenda = server.Agendas[agendaId];
                         Payload.SendJson(PayloadType.AddAgenda, agenda, stream, jsonOptions);
+                        Console.WriteLine("Subscribe successful.");
                         break;
                     }
                     case PayloadType.UnsubscribeFromAgenda:
                     {
+                        Console.WriteLine("Received unsubscribe request.");
                         var requestedIdAgenda = JsonSerializer.Deserialize<Agenda>(payloadBytes);
                         if (requestedIdAgenda == null)
                         {
@@ -122,6 +131,7 @@ public class Client(Guid clientId, TcpClient tcpClient, MyXamServer server)
                         if (!AgendaExists(agendaId)) break;
 
                         UnsubscribeFromAgenda(agendaId);
+                        Console.WriteLine("Unsubscribe successful.");
                         break;
                     }
                     case PayloadType.AvailableAgendas:
