@@ -8,7 +8,7 @@ namespace MyXamClient.ViewModels;
 
 public partial class HomePageViewModel
 {
-    string filePath;
+    private string filePath;
 
     private void Init()
     {
@@ -51,8 +51,6 @@ public partial class HomePageViewModel
         {
             await Shell.Current.DisplayAlert("Error Message",
                 "Can't read file, because file doesn't exists. \nTry writing to file first", "OK");
-
-            return;
         }
     }
 }

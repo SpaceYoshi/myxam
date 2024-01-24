@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace MyXamTest.Client;
 
-namespace MyXamTest.Client
+public class EventViewModelTests
 {
-    internal class EventViewModelTests
+    [Fact]
+    public void Test1()
     {
+
     }
 }

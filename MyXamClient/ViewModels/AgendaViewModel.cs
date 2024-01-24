@@ -2,22 +2,23 @@
 using CommunityToolkit.Mvvm.Input;
 using MyXamClient.Services;
 using System.Collections.ObjectModel;
+using MyXamClient.Services.Navigation;
 using MyXamLibrary.Models;
 
 namespace MyXamClient.ViewModels;
 
-public partial class AgendaViewModel : ObservableObject
+public partial class AgendaViewModel(INavigationService navigationService) : ObservableObject
 {
     [ObservableProperty]
-    private static ObservableCollection<AgendaEvent> _agenda = new (AgendaService.Events);
+    public static ObservableCollection<AgendaEvent> _agenda = new (AgendaService.Events);
 
     [ObservableProperty]
     private string _selectedItem;
 
     [RelayCommand]
-    private static async Task NavigateToEventPage()
+    public async Task NavigateToEventPage()
     {
-        await Shell.Current.GoToAsync("EventPage");
+        await navigationService.NavigateAsync("EventPage");
     }
 
     public static async Task UpdateAgenda()

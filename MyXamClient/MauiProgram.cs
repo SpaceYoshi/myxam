@@ -1,5 +1,6 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
+using MyXamClient.Services.Navigation;
 using MyXamClient.Services.Tcp;
 using MyXamClient.ViewModels;
 using MyXamClient.Views;
@@ -27,6 +28,8 @@ public static class MauiProgram
         builder.Services.AddSingleton<EventViewModel>();
         builder.Services.AddSingleton<AgendaViewModel>();
         builder.Services.AddSingleton<HomePageViewModel>();
+
+        builder.Services.AddSingleton<INavigationService, NavigationService>();
 
         // builder.Services.AddSingleton<TcpService>();
         // var tcpService = new TcpService();

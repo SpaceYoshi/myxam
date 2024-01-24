@@ -29,4 +29,8 @@
       <ProjectReference Include="..\MyXamServer\MyXamServer.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Library\" />
+    </ItemGroup>
+
 </Project>
