@@ -1,5 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
+﻿using Moq;
 using MyXamClient.Services;
 using MyXamLibrary.Models;
 using MyXamClient.ViewModels;

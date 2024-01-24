@@ -8,22 +8,6 @@
              Title="AgendaPage">
 
     <Grid ColumnDefinitions="*,*" RowDefinitions="50,*" >
-        <Picker Title="Select a Day" 
-                Grid.Row="0" 
-                Grid.Column="0" 
-                Margin="5,0,20,0" 
-                HorizontalOptions="Start"
-                SelectedItem="{Binding SelectedItem}"
-                FontSize="14"
-                FontAttributes="Bold"
-                >
-            <Picker.Items>
-                <x:String>Monday</x:String>
-                <x:String>Tuesday</x:String>
-                <x:String>Wednesday</x:String>
-            </Picker.Items>
-        </Picker>
-
         <Button Text="Add Event" 
                 BackgroundColor="Gray" 
                 Grid.Column="1" 
