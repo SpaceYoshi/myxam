@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyXamServer", "MyXamServer\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyXamLibrary", "MyXamLibrary\MyXamLibrary.csproj", "{8E829F3B-49B9-4362-87AB-1361FF4B1FB8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyXamTest", "MyXamTest\MyXamTest.csproj", "{76B33504-8AA8-44B3-A69B-E4CEFA46B737}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -29,6 +31,10 @@ Global
 		{8E829F3B-49B9-4362-87AB-1361FF4B1FB8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8E829F3B-49B9-4362-87AB-1361FF4B1FB8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8E829F3B-49B9-4362-87AB-1361FF4B1FB8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{76B33504-8AA8-44B3-A69B-E4CEFA46B737}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{76B33504-8AA8-44B3-A69B-E4CEFA46B737}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{76B33504-8AA8-44B3-A69B-E4CEFA46B737}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{76B33504-8AA8-44B3-A69B-E4CEFA46B737}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
