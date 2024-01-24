@@ -1,10 +1,10 @@
 namespace MyXamClient.Models;
 
-public class Agenda(Guid id, string name, IEnumerable<AgendaEvent>? events = default) : IEquatable<Agenda>
+public class Agenda(Guid id, string name, Dictionary<Guid, AgendaEvent>? events = default) : IEquatable<Agenda>
 {
-    private Guid Id { get; } = id;
-    private string Name { get; set; } = name;
-    private IEnumerable<AgendaEvent>? Events { get; set; } = events;
+    public Guid Id { get; } = id;
+    public string Name { get; set; } = name;
+    public Dictionary<Guid, AgendaEvent> Events { get; set; } = events ?? new Dictionary<Guid, AgendaEvent>();
 
     public bool Equals(Agenda? other)
     {
@@ -17,7 +17,7 @@ public class Agenda(Guid id, string name, IEnumerable<AgendaEvent>? events = def
     {
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
-        if (obj.GetType() != this.GetType()) return false;
+        if (obj.GetType() != GetType()) return false;
         return Equals((Agenda)obj);
     }
 

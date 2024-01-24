@@ -1,4 +1,6 @@
-﻿namespace MyXamClient.Models;
+﻿using System.Text.Json.Serialization;
+
+namespace MyXamClient.Models;
 
 public class AgendaEvent(
     Guid id,
@@ -9,19 +11,22 @@ public class AgendaEvent(
     // Optional
     string? location = default,
     string? description = default,
-    IEnumerable<string>? tags = default,
+    HashSet<string>? tags = default,
     EventPriority priority = EventPriority.Normal)
     : IEquatable<AgendaEvent>
 {
-    private Guid Id { get; } = id;
-    private Guid AgendaId { get; set; } = agendaId;
-    private string Name { get; set; } = name;
-    private DateTimeOffset StartTime { get; set; } = startTime;
-    private DateTimeOffset EndTime { get; set; } = endTime;
-    private string? Location { get; set; } = location;
-    private string? Description { get; set; } = description;
-    private IEnumerable<string>? Tags { get; set; } = tags;
-    private EventPriority Priority { get; set; } = priority;
+    public Guid Id { get; } = id;
+    public Guid AgendaId { get; set; } = agendaId;
+    public string Name { get; set; } = name;
+    public DateTimeOffset StartTime { get; set; } = startTime;
+    public DateTimeOffset EndTime { get; set; } = endTime;
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public string? Location { get; set; } = location;
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public string? Description { get; set; } = description;
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingDefault)]
+    public HashSet<string>? Tags { get; set; } = tags;
+    public EventPriority Priority { get; set; } = priority;
 
     public bool Equals(AgendaEvent? other)
     {
@@ -35,7 +40,7 @@ public class AgendaEvent(
         if (ReferenceEquals(null, obj)) return false;
         if (ReferenceEquals(this, obj)) return true;
         if (obj.GetType() != GetType()) return false;
-        return Equals((AgendaEvent) obj);
+        return Equals((AgendaEvent)obj);
     }
 
     public override int GetHashCode()
