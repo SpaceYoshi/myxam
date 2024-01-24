@@ -1,6 +1,4 @@
-﻿using System.Text.Json.Serialization;
-
-namespace MyXamClient.Models;
+﻿namespace MyXamClient.Models;
 
 public class AgendaEvent(
     Guid id,
