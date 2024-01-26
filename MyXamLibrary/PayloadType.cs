@@ -38,8 +38,8 @@ public static class Payload
 
     public static byte[] GetPayload(PayloadType type, byte[] payload)
     {
-        var length = (uint)(payload.Length + 5);
-        var package = new byte[length];
+        var length = (uint)payload.Length;
+        var package = new byte[length + 5];
 
         BitConverter.GetBytes(length).CopyTo(package, 0);
         package[4] = Convert.ToByte(type);
@@ -54,5 +54,6 @@ public static class Payload
         var jsonBytes = Encoding.UTF8.GetBytes(jsonString);
         var payload = GetPayload(type, jsonBytes);
         stream.Write(payload);
+        stream.Flush();
     }
 }

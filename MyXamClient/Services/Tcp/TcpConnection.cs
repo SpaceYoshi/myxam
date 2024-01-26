@@ -26,10 +26,9 @@ public class TcpConnection(TcpClient tcpClient)
     {
         try
         {
-            using var stream = tcpClient.GetStream();
-            using var reader = new BinaryReader(stream, Encoding.UTF8, true);
-
-            while (tcpClient.Connected)
+            var stream = tcpClient.GetStream();
+            using var reader = new BinaryReader(stream);
+            while (true)
             {
                 var unsignedPayloadLength = reader.ReadUInt32();
                 var payloadLength = Convert.ToInt32(unsignedPayloadLength); // Ignore first bit for now
@@ -72,7 +71,7 @@ public class TcpConnection(TcpClient tcpClient)
                         // Add event if agenda exists
                         var agendaId = agendaEvent.AgendaId;
                         if (!AgendaExists(agendaId)) break;
-                        var agenda = AgendaService.Agendas[agendaEvent.AgendaId];
+                        var agenda = AgendaService.Agendas[agendaId];
                         agenda.Events.Add(agendaId, agendaEvent);
 
                         // TODO Demo

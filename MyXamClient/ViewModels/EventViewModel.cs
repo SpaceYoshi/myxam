@@ -1,12 +1,13 @@
 ﻿using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using MyXamClient.Services;
+using MyXamClient.Services.Navigation;
 using MyXamClient.Services.Tcp;
 using MyXamLibrary.Models;
 
 namespace MyXamClient.ViewModels;
 
-public partial class EventViewModel : ObservableObject
+public partial class EventViewModel(INavigationService navigationService, ITcpService tcpService) : ObservableObject
 {
     [ObservableProperty]
     private int _id;
@@ -24,21 +25,21 @@ public partial class EventViewModel : ObservableObject
     private DateTimeOffset _endTime;
 
     [RelayCommand]
-    private static async Task GoBack()
+    public async Task GoBack()
     {
         await AgendaViewModel.UpdateAgenda();
-        await Shell.Current.GoToAsync("AgendaPage");
+        await navigationService.NavigateAsync("AgendaPage");
     }
 
     [RelayCommand]
-    private void AddEvent()
+    public void AddEvent()
     {
         var newEvent = CreateEvent();
         AgendaService.Events.Add(newEvent);
-        TcpService.SendEvent(newEvent);
+        tcpService.SendEvent(newEvent);
     }
 
-    private AgendaEvent CreateEvent()
+    public AgendaEvent CreateEvent()
     {
         var newEvent = new AgendaEvent
         (

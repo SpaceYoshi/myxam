@@ -8,9 +8,9 @@ namespace MyXamClient.ViewModels;
 
 public partial class HomePageViewModel
 {
-    private string filePath;
+    public string filePath;
 
-    private void Init()
+    public void Init()
     {
         filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "C:\\agenda.json");
     }

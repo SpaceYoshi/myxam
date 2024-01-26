@@ -1,5 +1,4 @@
 using System.Net.Sockets;
-using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using ConcurrentCollections;
@@ -8,21 +7,28 @@ using MyXamLibrary.Models;
 
 namespace MyXamServer;
 
-public class Client(Guid clientId, TcpClient tcpClient, MyXamServer server)
+public class Client
 {
-    public Guid Id { get; } = clientId;
-    private TcpClient TcpClient { get; } = tcpClient;
+    public Guid Id { get; }
+    private TcpClient TcpClient { get; }
     private ConcurrentHashSet<Guid> SubscribedAgendaIds { get; } = [];
+    private MyXamServer _server;
+
+    public Client(Guid clientId, TcpClient tcpClient, MyXamServer server)
+    {
+        Id = clientId;
+        TcpClient = tcpClient;
+        _server = server;
+    }
 
     public void Listen()
     {
         Console.WriteLine("New client started: " + Id);
         try
         {
-            using var stream = TcpClient.GetStream();
-            using var reader = new BinaryReader(stream, Encoding.UTF8, true);
-
-            while (tcpClient.Connected)
+            var stream = TcpClient.GetStream();
+            using var reader = new BinaryReader(stream);
+            while (true)
             {
                 var unsignedPayloadLength = reader.ReadUInt32();
                 var payloadLength = Convert.ToInt32(unsignedPayloadLength); // Ignore first bit for now
@@ -55,8 +61,16 @@ public class Client(Guid clientId, TcpClient tcpClient, MyXamServer server)
                             break;
                         }
 
+                        // DEMO
+                        foreach (var client in _server.Clients.Values)
+                        {
+                            if (client == this) continue;
+                            Stream clientStream = client.TcpClient.GetStream();
+                            Payload.SendJson(PayloadType.AddAgenda, agenda, clientStream, jsonOptions);
+                        }
+
                         // Add agenda to server
-                        server.Agendas[agenda.Id] = agenda;
+                        _server.Agendas[agenda.Id] = agenda;
                         Console.WriteLine("Agenda added to server.");
                         break;
                     }
@@ -73,17 +87,26 @@ public class Client(Guid clientId, TcpClient tcpClient, MyXamServer server)
                         // Add event to server if its agenda exists
                         var agendaId = agendaEvent.AgendaId;
                         if (!AgendaExists(agendaId)) break;
-                        var agenda = server.Agendas[agendaEvent.AgendaId];
+                        var agenda = _server.Agendas[agendaId];
                         agenda.Events.Add(agendaId, agendaEvent);
                         Console.WriteLine("Event added to server.");
 
-                        // Send event to all clients that are subscribed to the event's agenda
-                        foreach (var client in server.Clients.Values.Where(client =>
-                                     client.SubscribedAgendaIds.Contains(agendaId)))
+                        // // Send event to all clients that are subscribed to the event's agenda
+                        // foreach (var client in _server.Clients.Values.Where(client =>
+                        //              client.SubscribedAgendaIds.Contains(agendaId)))
+                        // {
+                        //     Stream clientStream = client.TcpClient.GetStream();
+                        //     Payload.SendJson(PayloadType.AddEvent, agendaEvent, clientStream, jsonOptions);
+                        // }
+
+                        // DEMO: Send event to all clients that are subscribed to the event's agenda
+                        foreach (var client in _server.Clients.Values)
                         {
+                            if (client == this) continue;
                             Stream clientStream = client.TcpClient.GetStream();
                             Payload.SendJson(PayloadType.AddEvent, agendaEvent, clientStream, jsonOptions);
                         }
+
                         Console.WriteLine("Event sent to other clients.");
                         break;
                     }
@@ -91,9 +114,9 @@ public class Client(Guid clientId, TcpClient tcpClient, MyXamServer server)
                     {
                         Console.WriteLine("Received request for available agendas.");
                         // Send server agendas without events
-                        var emptyAgendas = new List<Agenda>(server.Agendas.Count);
+                        var emptyAgendas = new List<Agenda>(_server.Agendas.Count);
                         emptyAgendas.AddRange(
-                            server.Agendas.Values.Select(agenda => new Agenda(agenda.Id, agenda.Name)));
+                            _server.Agendas.Values.Select(agenda => new Agenda(agenda.Id, agenda.Name)));
                         Payload.SendJson(PayloadType.AvailableAgendas, emptyAgendas, stream, jsonOptions);
                         Console.WriteLine("Sending available agendas.");
                         break;
@@ -113,7 +136,7 @@ public class Client(Guid clientId, TcpClient tcpClient, MyXamServer server)
 
                         SubscribeToAgenda(agendaId);
                         // Send subscribed agenda
-                        var agenda = server.Agendas[agendaId];
+                        var agenda = _server.Agendas[agendaId];
                         Payload.SendJson(PayloadType.AddAgenda, agenda, stream, jsonOptions);
                         Console.WriteLine("Subscribe successful.");
                         break;
@@ -148,13 +171,13 @@ public class Client(Guid clientId, TcpClient tcpClient, MyXamServer server)
         }
         finally
         {
-            server.Clients.Remove(Id);
+            _server.Clients.Remove(Id);
         }
     }
 
     private bool AgendaExists(Guid agendaId)
     {
-        var exists = server.Agendas.ContainsKey(agendaId);
+        var exists = _server.Agendas.ContainsKey(agendaId);
         if (!exists) Console.WriteLine("Referenced agenda in event does not exist: " + agendaId);
         return exists;
     }

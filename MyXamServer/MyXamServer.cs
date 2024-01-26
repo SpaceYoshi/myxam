@@ -21,16 +21,22 @@ namespace MyXamServer
 
         public void Run()
         {
-            var endPoint = new IPEndPoint(IPAddress.Loopback, port);
-            Console.WriteLine("Server started on {0}:{1}.", endPoint.Address, port);
-            var listener = new TcpListener(endPoint);
+            const string address = "127.0.0.1";
+            Console.WriteLine("Server started on {0}:{1}.", address, port);
+            var listener = new TcpListener(IPAddress.Parse(address), port);
             listener.Start();
 
             while (true)
             {
+                Console.WriteLine("Waiting for a connection...");
                 var client = new Client(Guid.NewGuid(), listener.AcceptTcpClient(), this);
                 Clients[client.Id] = client;
-                Task.Run(() => client.Listen());
+                new Thread(client.Listen).Start();
+
+                // var listenerThread = new Thread(client.Listen);
+                // listenerThread.Start();
+
+                // Task.Run(() => client.Listen());
             }
         }
     }
