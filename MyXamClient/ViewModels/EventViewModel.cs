@@ -7,7 +7,7 @@ using MyXamLibrary.Models;
 
 namespace MyXamClient.ViewModels;
 
-public partial class EventViewModel(INavigationService navigationService, ITcpService tcpService) : ObservableObject
+public partial class EventViewModel(INavigationService navigationService) : ObservableObject
 {
     [ObservableProperty]
     private int _id;
@@ -36,7 +36,7 @@ public partial class EventViewModel(INavigationService navigationService, ITcpSe
     {
         var newEvent = CreateEvent();
         AgendaService.Events.Add(newEvent);
-        tcpService.SendEvent(newEvent);
+        TcpService.SendEventStatic(newEvent);
     }
 
     public AgendaEvent CreateEvent()
