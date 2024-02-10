@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MyXamClient.Views.EventPage"
+             Title="EventPage">
+    
+    <Grid Margin="20,120,20,0" ColumnDefinitions="*,*" RowDefinitions="*,*,*,*,50" ColumnSpacing="100">
+        <Label Text="Naam" FontSize="Medium" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
+        <Entry Placeholder="Voer naam in" Text="{Binding Name}" Margin="0,10,0,0" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"/>
+
+        <Label Text="Locatie" FontSize="Medium" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"/>
+        <Entry Placeholder="Voer naam in" Text="{Binding Location}" Margin="0,10,0,0" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2"/>
+
+        <!--<Label Text="Starttijd" FontSize="Medium" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"/>
+        <TimePicker Format="T" Time="{Binding StartTime}" Margin="0,10,0,0" Grid.Row="2" Grid.Column="0" Grid.ColumnSpan="2"/>
+
+        <Label Text="Eindtijd" FontSize="Medium" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"/>
+        <TimePicker Format="T" Time="{Binding EndTime}" Margin="0,10,0,0" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2"/>-->
+
+        <Button Text="Save" Command="{Binding AddEventCommand}" 
+                Grid.Column="0"
+                Grid.Row="4"
+                />
+
+        <Button Text="Return" Command="{Binding GoBackCommand}" 
+                Grid.Column="1" 
+                Grid.Row="4" 
+                />
+    </Grid>
+</ContentPage>
